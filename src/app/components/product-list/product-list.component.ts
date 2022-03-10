@@ -22,7 +22,7 @@ export class ProductListComponent implements OnInit {
   searchMode: boolean = false;
 
   thePageNumber: number = 1;
-  thePageSize: number = 10;
+  thePageSize: number = 5;
   theTotalElements: number = 0;
 
   constructor(
@@ -73,19 +73,27 @@ export class ProductListComponent implements OnInit {
       `currentCategoryId=${this.currentCategoryId}, thePageNumber=${this.thePageNumber}`
     );
 
-    this.productService.getProductListPaginate(
-      this.thePageNumber - 1,
-      this.thePageSize,
-      this.currentCategoryId
-    ).subscribe(this.processResult());
+    this.productService
+      .getProductListPaginate(
+        this.thePageNumber - 1,
+        this.thePageSize,
+        this.currentCategoryId
+      )
+      .subscribe(this.processResult());
   }
 
   processResult() {
-    return data => {
+    return (data) => {
       this.products = data._embedded.products;
       this.thePageNumber = data.page.number + 1;
       this.thePageSize = data.page.size;
       this.theTotalElements = data.page.totalElements;
     };
+  }
+
+  updatePageSize(pageSize: number) {
+    this.thePageSize = pageSize;
+    this.thePageNumber = 1;
+    this.listProducts();
   }
 }
