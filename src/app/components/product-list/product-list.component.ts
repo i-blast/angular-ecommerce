@@ -1,7 +1,9 @@
 import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { CartItem } from 'src/app/common/cart-item';
 import { Product } from 'src/app/common/product';
+import { CartService } from 'src/app/services/cart.service';
 import { ProductService } from 'src/app/services/product.service';
 
 const DEFAULT_CATEGORY_ID = 1;
@@ -29,6 +31,7 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
+    private cartService: CartService,
     private route: ActivatedRoute
   ) {}
 
@@ -109,5 +112,12 @@ export class ProductListComponent implements OnInit {
     this.thePageSize = pageSize;
     this.thePageNumber = 1;
     this.listProducts();
+  }
+
+  addToCart(product: Product) {
+    console.log(`Adding to cart: ${product.name}, ${product.unitPrice}`);
+    const theCartItem: CartItem = new CartItem(product);
+
+    this.cartService.addToCart(theCartItem);
   }
 }
