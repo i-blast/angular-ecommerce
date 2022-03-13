@@ -27,6 +27,25 @@ export class CartService {
     this.computeCartTotals();
   }
 
+  decrementQuantity(cartItem: CartItem) {
+    cartItem.quantity--;
+
+    if (cartItem.quantity === 0) {
+      this.remove(cartItem);
+    } else {
+      this.computeCartTotals();
+    }
+  }
+
+  remove(cartItem: CartItem) {
+    const itemIndex = this.cartItems.findIndex(item => cartItem.id === item.id);
+
+    if (itemIndex > -1) {
+      this.cartItems.splice(itemIndex, 1);
+      this.computeCartTotals();
+    }
+  }
+
   computeCartTotals() {
     let totalPriceValue: number = 0;
     let totalQuantityValue: number = 0;
@@ -51,7 +70,11 @@ export class CartService {
       );
     });
 
-    console.log(`totalPrice=${totalPriceValue.toFixed(2)}, totalQuantity=${totalQuantityValue}`);
+    console.log(
+      `totalPrice=${totalPriceValue.toFixed(
+        2
+      )}, totalQuantity=${totalQuantityValue}`
+    );
     console.log('-----');
   }
 }
