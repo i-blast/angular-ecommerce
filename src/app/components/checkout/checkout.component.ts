@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Country } from 'src/app/common/country';
+import { State } from 'src/app/common/state';
 import { Luv2ShopFormService } from 'src/app/services/luv2-shop-form.service';
 
 @Component({
@@ -18,6 +19,8 @@ export class CheckoutComponent implements OnInit {
   creditCardYears: number[] = [];
 
   countries: Country[] = [];
+  shippingAddressStates: State[] = [];
+  billingAddressStates: State[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -67,8 +70,8 @@ export class CheckoutComponent implements OnInit {
       this.creditCardYears = data;
     });
 
-    this.luv2ShopService.getCountries().subscribe(data => {
-      console.log("Retrieved countries: " + JSON.stringify(data));
+    this.luv2ShopService.getCountries().subscribe((data) => {
+      console.log('Retrieved countries: ' + JSON.stringify(data));
       this.countries = data;
     });
   }
@@ -92,7 +95,9 @@ export class CheckoutComponent implements OnInit {
     const creditCardFormGroup = this.checkoutFormGroup.get('creditCard');
 
     const currentYear: number = new Date().getFullYear();
-    const selectedYear: number = Number(creditCardFormGroup?.value.expirationYear);
+    const selectedYear: number = Number(
+      creditCardFormGroup?.value.expirationYear
+    );
 
     let startMonth: number;
     if (currentYear === selectedYear) {
@@ -101,11 +106,28 @@ export class CheckoutComponent implements OnInit {
       startMonth = 1;
     }
 
-    this.luv2ShopService.getCreditCardMonths(startMonth).subscribe(
-      data => {
-        console.log("Retrieved credit card months: " + JSON.stringify(data));
-        this.creditCardMonths = data;
+    this.luv2ShopService.getCreditCardMonths(startMonth).subscribe((data) => {
+      console.log('Retrieved credit card months: ' + JSON.stringify(data));
+      this.creditCardMonths = data;
+    });
+  }
+
+  getStates(formGroupName: string) {
+    const formGroup = this.checkoutFormGroup.get(formGroupName);
+
+    const countryCode = formGroup?.value.country.code;
+    const countryName = formGroup?.value.country.name;
+
+    this.luv2ShopService.getStates(countryCode).subscribe(data => {
+      if (formGroupName === 'shippingAddress') {
+        this.shippingAddressStates = data;
+      } else if (formGroupName === 'billingAddress') {
+        this.billingAddressStates = data;
+      } else {
+        throw `Form group name does not exist: ${formGroupName}.`;
       }
-    );
+
+      formGroup?.get('state')?.setValue(data[0]);
+    });
   }
 }
