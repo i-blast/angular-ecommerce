@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Country } from 'src/app/common/country';
 import { State } from 'src/app/common/state';
 import { Luv2ShopFormService } from 'src/app/services/luv2-shop-form.service';
@@ -39,7 +45,7 @@ export class CheckoutComponent implements OnInit {
         lastName: new FormControl('', [
           Validators.required,
           Validators.minLength(2),
-          Luv2ShopValidators.notOnlyWhitespace
+          Luv2ShopValidators.notOnlyWhitespace,
         ]),
         email: new FormControl('', [
           Validators.required,
@@ -150,16 +156,16 @@ export class CheckoutComponent implements OnInit {
     });
   }
 
-  get firstName(): AbstractControl | null {
-    return this.checkoutFormGroup.get('customer.firstName');
+  get firstName(): AbstractControl {
+    return this.checkoutFormGroup.get('customer.firstName')!;
   }
 
-  get lastName(): AbstractControl | null {
-    return this.checkoutFormGroup.get('customer.lastName');
+  get lastName(): AbstractControl {
+    return this.checkoutFormGroup.get('customer.lastName')!;
   }
 
-  get email(): AbstractControl | null {
-    return this.checkoutFormGroup.get('customer.email');
+  get email(): AbstractControl {
+    return this.checkoutFormGroup.get('customer.email')!;
   }
 }
 
