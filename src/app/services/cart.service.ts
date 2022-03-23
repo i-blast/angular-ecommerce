@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { CartItem } from '../common/cart-item';
 
 @Injectable({
@@ -8,8 +8,8 @@ import { CartItem } from '../common/cart-item';
 export class CartService {
   cartItems: CartItem[] = [];
 
-  totalPrice: Subject<number> = new Subject<number>();
-  totalQuantity: Subject<number> = new Subject<number>();
+  totalPrice: Subject<number> = new BehaviorSubject<number>(0);
+  totalQuantity: Subject<number> = new BehaviorSubject<number>(0);
 
   constructor() {}
 
@@ -38,7 +38,9 @@ export class CartService {
   }
 
   remove(cartItem: CartItem) {
-    const itemIndex = this.cartItems.findIndex(item => cartItem.id === item.id);
+    const itemIndex = this.cartItems.findIndex(
+      (item) => cartItem.id === item.id
+    );
 
     if (itemIndex > -1) {
       this.cartItems.splice(itemIndex, 1);
