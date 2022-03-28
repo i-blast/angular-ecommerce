@@ -27,6 +27,9 @@ export class LoginComponent implements OnInit {
         scopes: myAppConfig.oidc.scopes,
       },
       authClient: oktaAuth,
+      features: {
+        registration: true
+      }
     });
   }
 
