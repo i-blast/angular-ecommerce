@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Country } from '../common/country';
 import { State } from '../common/state';
 
@@ -8,8 +9,8 @@ import { State } from '../common/state';
   providedIn: 'root',
 })
 export class Luv2ShopFormService {
-  private countriesUrl = 'http://localhost:8080/api/countries';
-  private statesUrl = 'http://localhost:8080/api/states';
+  private countriesUrl = environment.luv2ShopApiUrl + '/countries';
+  private statesUrl = environment.luv2ShopApiUrl + '/states';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -37,17 +38,17 @@ export class Luv2ShopFormService {
   }
 
   getCountries(): Observable<Country[]> {
-    return this.httpClient.get<GetResponseCountries>(this.countriesUrl).pipe(
-      map(response => response._embedded.countries)
-    );
+    return this.httpClient
+      .get<GetResponseCountries>(this.countriesUrl)
+      .pipe(map((response) => response._embedded.countries));
   }
 
   getStates(theCountryCode: string): Observable<State[]> {
     const searchStatesUrl = `${this.statesUrl}/search/findByCountryCode?code=${theCountryCode}`;
 
-    return this.httpClient.get<GetResponseStates>(searchStatesUrl).pipe(
-      map(response => response._embedded.states)
-    );
+    return this.httpClient
+      .get<GetResponseStates>(searchStatesUrl)
+      .pipe(map((response) => response._embedded.states));
   }
 }
 
