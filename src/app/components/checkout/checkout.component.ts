@@ -112,6 +112,8 @@ export class CheckoutComponent implements OnInit {
           Luv2ShopValidators.notOnlyWhitespace,
         ]),
       }),
+      creditCard: this.formBuilder.group({
+      }),
     });
 
     this.luv2ShopService.getCountries().subscribe((data) => {
