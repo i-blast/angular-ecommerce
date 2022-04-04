@@ -42,6 +42,8 @@ export class CheckoutComponent implements OnInit {
   cardElement: any;
   displayError: any = '';
 
+  isSubmitDisabled: boolean = false;
+
   constructor(
     private formBuilder: FormBuilder,
     private luv2ShopService: Luv2ShopFormService,
@@ -199,6 +201,8 @@ export class CheckoutComponent implements OnInit {
     console.log(`${this.paymentInfo.amount}`);
 
     if (!this.checkoutFormGroup.invalid && this.displayError.textContent === '') {
+      this.isSubmitDisabled = true;
+
       this.checkoutService
         .createPaymentIntent(this.paymentInfo)
         .subscribe((paymentIntentResponse) => {
@@ -225,14 +229,17 @@ export class CheckoutComponent implements OnInit {
             .then(function handler(this: any, result) {
                 if (result.error) {
                   alert(`There was an error: ${result.error.message}`);
+                  this.isSubmitDisabled = false;
                 } else {
                   this.checkoutService.placeOrder(purchase).subscribe({
                     next: (response) => {
                       alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
                       this.resetCart();
+                      this.isSubmitDisabled = false;
                     },
                     error: (err) => {
                       alert(`There was an error: ${err.message}`);
+                      this.isSubmitDisabled = false;
                     },
                   });
                 }
